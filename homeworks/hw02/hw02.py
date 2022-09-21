@@ -194,7 +194,9 @@ def make_anonymous_factorial():
 
     # reference answer: https://zhuanlan.zhihu.com/p/463842005
     # and https://blog.csdn.net/qq_42103298/article/details/123773235
+    # and official answer here: https://www.bilibili.com/video/BV1X44y1W7qR?p=85
 
-    return (lambda f: lambda n: f(f, n))(f=lambda f, n: 1 if n == 1 else n * f(f, n-1))
+    # return (lambda f: lambda n: f(f, n))(f=lambda f, n: 1 if n == 1 else n * f(f, n-1))
+    return lambda n: (lambda f: f(n, f))(f=lambda n, fact: 1 if n == 1 else n * fact(n-1, fact)) 
     # return lambda n: (lambda func, n: 1 if n == 1 else n * func(func, n-1))(func=lambda func, n: 1 if n == 1 else n * func(func, n-1), n=n)
 
