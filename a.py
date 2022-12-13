@@ -16,3 +16,16 @@ def a():
 def b():
     print("b")
     return "bbb"
+
+
+# 2022/12/12
+doc = "abc"
+
+def changeD(doc):
+    # global doc
+    # nonlocal doc
+    def changeDoc():
+        # nonlocal doc
+        # doc = doc + "def"
+        print(doc)
+    return changeDoc
