@@ -20,6 +20,19 @@ def make_bank(balance):
     """
     def bank(message, amount):
         "*** YOUR CODE HERE ***"
+        nonlocal balance
+        if message == "deposit":
+            balance += amount
+            return balance
+        elif message == "withdraw":
+            if balance < amount:
+                return "Insufficient funds"
+            else:
+                balance -= amount
+                return balance
+        else:
+            return "Invalid message"
+
     return bank
 
 
@@ -52,6 +65,25 @@ def make_withdraw(balance, password):
     True
     """
     "*** YOUR CODE HERE ***"
+    times = 0
+    test_pwd_list = []
+    def withdraw(amount, test_pwd):
+        nonlocal balance, password, times
+        if times >= 3:
+            return "Frozen account. Attempts: " + str(test_pwd_list)
+        
+        if test_pwd != password:
+            times += 1
+            test_pwd_list.append(test_pwd)
+            return "Incorrect password"
+        else:
+            if balance < amount:
+                return "Insufficient funds"
+            else:
+                balance -= amount
+                return balance
+    
+    return withdraw
 
 
 def repeated(t, k):
@@ -76,6 +108,18 @@ def repeated(t, k):
     """
     assert k > 1
     "*** YOUR CODE HERE ***"
+    count = 1
+    last_num = next(t)
+    while True:
+        cur_num = next(t)
+        if cur_num == last_num:
+            count += 1
+        else:
+            count = 1
+        if count >= k:
+            return cur_num
+        last_num = cur_num
+
 
 
 def permutations(seq):
@@ -101,6 +145,18 @@ def permutations(seq):
     [['a', 'b'], ['b', 'a']]
     """
     "*** YOUR CODE HERE ***"
+    def backtracking(seq, level=0):
+        if level >= len(seq) - 1:
+            yield seq[:]  # 一定不要忘记要做深拷贝！！！！！！！！
+        else:
+            for i in range(level, len(seq)):
+                seq[level], seq[i] = seq[i], seq[level]
+
+                yield from backtracking(seq, level+1)
+
+                seq[level], seq[i] = seq[i], seq[level]
+    
+    yield from backtracking(list(seq), 0)
 
 
 def make_joint(withdraw, old_pass, new_pass):
@@ -142,6 +198,17 @@ def make_joint(withdraw, old_pass, new_pass):
     "Frozen account. Attempts: ['my', 'secret', 'password']"
     """
     "*** YOUR CODE HERE ***"
+    def func(amount, pwd):
+        if pwd == old_pass or pwd == new_pass:
+            return withdraw(amount, old_pass)
+        else:
+            return withdraw(amount, pwd)
+    
+    res = withdraw(0, old_pass)
+    if type(res) == str:
+        return res
+    else:
+        return func
 
 
 def remainders_generator(m):
@@ -176,9 +243,14 @@ def remainders_generator(m):
     11
     """
     "*** YOUR CODE HERE ***"
+    yield naturals(m, m)
+    
+    for i in range(1, m):
+        yield naturals(i, m)
 
 
-def naturals():
+
+def naturals(init, step):
     """A generator function that yields the infinite sequence of natural
     numbers, starting at 1.
 
@@ -188,8 +260,8 @@ def naturals():
     >>> [next(m) for _ in range(10)]
     [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
     """
-    i = 1
+    i = init
     while True:
         yield i
-        i += 1
+        i += step
 
