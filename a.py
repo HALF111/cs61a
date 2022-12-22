@@ -41,3 +41,33 @@ class Account:
     def deposit(self, amount):
         self.balance += amount
         return self.balance
+
+
+# 2022/12/21
+from fractions import Fraction
+half = Fraction(1,2)
+print(half)
+print(repr(half))
+print(str(half))
+print(eval(repr(half)))
+print(eval(str(half)))
+
+
+class Bear:
+    def __init__(self):
+        self.__repr__ = lambda: 'oski'
+        self.__str__ = lambda: "this bear"
+
+    def __repr__(self):
+        return "Bear()"
+
+    def __str__(self):
+        return "a bear"
+
+oski = Bear()
+print()
+print(oski)
+print(str(oski))
+print(repr(oski))
+print(oski.__str__())
+print(oski.__repr__())
