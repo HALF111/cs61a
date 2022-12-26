@@ -8,6 +8,11 @@ def convert_link(link):
     []
     """
     "*** YOUR CODE HERE ***"
+    ans = []
+    while link != Link.empty:
+        ans.append(link.first)
+        link = link.rest
+    return ans
 
 
 def every_other(s):
@@ -28,6 +33,10 @@ def every_other(s):
     Link(4)
     """
     "*** YOUR CODE HERE ***"
+    cur_s = s
+    while cur_s != Link.empty and cur_s.rest != Link.empty:
+        cur_s.rest = cur_s.rest.rest
+        cur_s = cur_s.rest
 
 
 def cumulative_mul(t):
@@ -40,6 +49,13 @@ def cumulative_mul(t):
     Tree(105, [Tree(15, [Tree(5)]), Tree(7)])
     """
     "*** YOUR CODE HERE ***"
+    def f(t: Tree):
+        if t.is_leaf():
+            return t.label
+        for branch in t.branches:
+            t.label *= f(branch)
+        return t.label
+    f(t)
 
 
 def has_cycle(link):
@@ -57,6 +73,14 @@ def has_cycle(link):
     False
     """
     "*** YOUR CODE HERE ***"
+    visited_links = []
+    cur_link = link
+    while cur_link != Link.empty:
+        if cur_link in visited_links:
+            return True
+        visited_links.append(cur_link)
+        cur_link = cur_link.rest
+    return False
 
 def has_cycle_constant(link):
     """Return whether link contains a cycle.
@@ -70,6 +94,13 @@ def has_cycle_constant(link):
     False
     """
     "*** YOUR CODE HERE ***"
+    p_fast, p_slow = link, link
+    while p_fast != Link.empty and p_fast.rest != Link.empty:
+        p_fast = p_fast.rest.rest
+        p_slow = p_slow.rest
+        if p_fast == p_slow:
+            return True
+    return False
 
 
 def reverse_other(t):
@@ -86,6 +117,32 @@ def reverse_other(t):
     Tree(1, [Tree(8, [Tree(3, [Tree(5), Tree(4)]), Tree(6, [Tree(7)])]), Tree(2)])
     """
     "*** YOUR CODE HERE ***"
+    # Solution 1:
+    # def f(t: Tree, depth: int):
+    #     if t.is_leaf():
+    #         return
+    #     if depth % 2 == 1:
+    #         for branch in t.branches:
+    #             f(branch, depth+1)
+    #     else:
+    #         label_list = []
+    #         for branch in t.branches:
+    #             label_list.append(branch.label)
+    #         label_list = reversed(label_list)
+    #         for label, branch in zip(label_list, t.branches):
+    #             branch.label = label
+    #             f(branch, depth+1)
+    # f(t, 0)
+        
+    # Solution 2:
+    label_list = []
+    for branch in t.branches:
+        label_list.append(branch.label)
+    label_list = reversed(label_list)
+    for label, branch in zip(label_list, t.branches):
+        branch.label = label
+        for bb in branch.branches:
+            reverse_other(bb)
 
 
 class Link:

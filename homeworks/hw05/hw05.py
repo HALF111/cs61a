@@ -36,6 +36,38 @@ class VendingMachine:
     'Here is your soda.'
     """
     "*** YOUR CODE HERE ***"
+    def __init__(self, stock_name, price):
+        self.stock_name = stock_name
+        self.price = price
+        self.all_balance = 0
+        self.stock_number = 0
+
+    def restock(self, number):
+        self.stock_number += number
+        return f'Current {self.stock_name} stock: {self.stock_number}'
+
+    def add_funds(self, balance):
+        if self.stock_number == 0:
+            return f'Inventory empty. Restocking required. Here is your ${balance}.'
+        else:
+            self.all_balance += balance
+            return f'Current balance: ${self.all_balance}'
+
+    def vend(self):
+        if self.stock_number == 0:
+            return 'Inventory empty. Restocking required.'
+        elif self.all_balance < self.price:
+            return f'You must add ${self.price - self.all_balance} more funds.'
+        else:
+            self.all_balance -= self.price
+            self.stock_number -= 1
+            if self.all_balance == 0:
+                return f'Here is your {self.stock_name}.'
+            else:
+                tmp_balance = self.all_balance
+                self.all_balance = 0
+                return f'Here is your {self.stock_name} and ${tmp_balance} change.'
+
 
 
 class Mint:
@@ -74,9 +106,11 @@ class Mint:
 
     def create(self, kind):
         "*** YOUR CODE HERE ***"
+        return kind(self.year)
 
     def update(self):
         "*** YOUR CODE HERE ***"
+        self.year = Mint.current_year
 
 class Coin:
     def __init__(self, year):
@@ -84,6 +118,8 @@ class Coin:
 
     def worth(self):
         "*** YOUR CODE HERE ***"
+        extra_value = 0 if ((Mint.current_year - self.year - 50) <= 0) else (Mint.current_year - self.year - 50)
+        return self.cents + extra_value
 
 class Nickel(Coin):
     cents = 5
@@ -108,6 +144,12 @@ def store_digits(n):
     >>> print("Do not use str or reversed!") if any([r in cleaned for r in ["str", "reversed"]]) else None
     """
     "*** YOUR CODE HERE ***"
+    def f(n, rest):
+        if n < 10:
+            return Link(n, rest)
+        else:
+            return f(n//10, Link(n%10, rest))
+    return f(n, Link.empty)
 
 
 def is_bst(t):
@@ -136,6 +178,34 @@ def is_bst(t):
     False
     """
     "*** YOUR CODE HERE ***"
+    flag = True
+    def inOrder(t: Tree, arr: list = []):
+        nonlocal flag
+        if t.is_leaf():
+            arr.append(t.label)
+            return arr
+        
+        if len(t.branches) >= 3:
+            flag = False
+        elif len(t.branches) == 2:
+            arr = inOrder(t.branches[0], arr)
+            arr.append(t.label)
+            arr = inOrder(t.branches[1], arr)
+        elif t.branches[0].label <= t.label:
+            arr = inOrder(t.branches[0], arr)
+            arr.append(t.label)
+        else:
+            arr.append(t.label)
+            arr = inOrder(t.branches[0], arr)
+        return arr
+    
+    arr = inOrder(t, [])
+    if not flag:
+        return False
+    for i in range(1, len(arr)):
+        if arr[i-1] > arr[i]:
+            return False
+    return True
 
 
 def preorder(t):
@@ -149,6 +219,13 @@ def preorder(t):
     [2, 4, 6]
     """
     "*** YOUR CODE HERE ***"
+    def innerPreOrder(t: Tree, arr: list = []):        
+        arr.append(t.label)
+        for branch in t.branches:
+            arr = innerPreOrder(branch, arr)
+        return arr
+    
+    return innerPreOrder(t, [])
 
 
 def path_yielder(t, value):
@@ -186,11 +263,17 @@ def path_yielder(t, value):
     [[0, 2], [0, 2, 1, 2]]
     """
 
+    # yield用法：https://zhuanlan.zhihu.com/p/321302488
+    # 递归于yield结合：https://www.cnblogs.com/python-xuehb/p/12176395.html
     "*** YOUR CODE HERE ***"
 
-    for _______________ in _________________:
-        for _______________ in _________________:
+    if t.label == value:
+        # 递归中的yield只会返回到上一层调用这个函数的时候，而并不是直接返回到main里面
+        yield [value]
 
+    for branch in t.branches:
+        for path in path_yielder(branch, value):
+            yield [t.label] + path
             "*** YOUR CODE HERE ***"
 
 
