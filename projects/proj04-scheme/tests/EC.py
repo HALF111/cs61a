@@ -46,8 +46,8 @@ test = {
           (lambda parameters not affected but body affected)
           scm> (let-to-lambda '(lambda (let a b) (+ let a b)))
           (lambda (let a b) (+ let a b))
-          scm> (let-to-lambda '(lambda (x) a (let ((a x)) a)))
-          (lambda (x) a ((lambda (a) a) x))
+          scm> (let-to-lambda '(lambda (x) (let ((a x)) a)))
+          (lambda (x) ((lambda (a) a) x))
           """,
           'hidden': False,
           'locked': False

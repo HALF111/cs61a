@@ -1,5 +1,25 @@
+; Q2
 (define (over-or-under num1 num2)
-  'YOUR-CODE-HERE
+  ; YOUR-CODE-HERE
+
+  ; Solution 1
+  ; (begin
+  ;   (define x (- num1 num2))
+  ;   (cond
+  ;       ((> x 0) 1)
+  ;       ((= x 0) 0)
+  ;       ((< x 0) -1)  
+  ;   )
+  ; )
+
+  ; Solution 2
+  (if (< num1 num2)
+    -1
+    (if (= num1 num2)
+      0
+      1
+    )
+  )
 )
 
 ;;; Tests
@@ -11,8 +31,10 @@
 ; expect 0
 
 
+; Q3
 (define (make-adder num)
-  'YOUR-CODE-HERE
+  ; 'YOUR-CODE-HERE
+  (lambda (y) (+ num y))
 )
 
 ;;; Tests
@@ -21,18 +43,30 @@
 ; expect 13
 
 
+; Q4
 (define (composed f g)
-  'YOUR-CODE-HERE
+  ; 'YOUR-CODE-HERE
+  (lambda (x) (f (g x)))
 )
 
 
+; Q5
 (define lst
-  'YOUR-CODE-HERE
+  ; 'YOUR-CODE-HERE
+  '((1) 2 (3 4) 5)
 )
 
 
+; Q6
 (define (remove item lst)
-  'YOUR-CODE-HERE
+  ; 'YOUR-CODE-HERE
+  (if (null? lst)
+    lst
+    (if (= (car lst) item)
+      (remove item (cdr lst))
+      (cons (car lst) (remove item (cdr lst)))
+    )
+  )
 )
 
 
